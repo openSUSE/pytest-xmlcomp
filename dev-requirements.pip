@@ -1,0 +1,8 @@
+-r requirements.pip
+tox
+bumpversion
+check-manifest
+flake8
+isort
+wheel
+-e .
