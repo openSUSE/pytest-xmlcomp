@@ -34,7 +34,7 @@ setup(
     maintainer='Fabian Baumanis',
     maintainer_email='fabian.baumanis@suse.com',
     license='GNU GPL v3.0',
-    url='https://github.com/Lightlace/pytest-xmlcomp',
+    url='https://github.com/openSUSE/pytest-xmlcomp',
     description='A simple plugin comparing XML files.',
     long_description=read('README.rst'),
     py_modules=['pytest_xmlcomp'],
