@@ -8,25 +8,24 @@ env:
 matrix:
   include:
     - env: TOXENV=flake8
-    - env: TOXENV=3.4
-      python: 3.4
-    - env: TOXENV=3.5
-      python: 3.5
-    - env: TOXENV=3.6
-      python: 3.6
+    - env: TOXENV=py34
+    - env: TOXENV=py35
+    - env: TOXENV=py36
 
 before_install:
+  - pip --version
+
+install:
+  # - pip install -U pip setuptools
+  - pip install -r dev-requirements.pip
+
+before_script:
   - python3 --version
   - uname -a
   - lsb_release -a
   - virtualenv --version
   - easy_install --version
-  - pip --version
   - tox --version
-
-install:
-  # - pip install -U pip setuptools
-  - pip install -r dev-requirements.pip
 
 script:
     - tox -v

@@ -1,5 +1,6 @@
 -r requirements.pip
 tox
+tox-travis
 bumpversion
 check-manifest
 flake8
