@@ -10,13 +10,9 @@ pytest-xmlcomp
     :target: https://pypi.org/project/pytest-xmlcomp
     :alt: Python versions
 
-.. image:: https://travis-ci.org/Lightlace/pytest-xmlcomp.svg?branch=master
-    :target: https://travis-ci.org/Lightlace/pytest-xmlcomp
+.. image:: https://travis-ci.org/openSUSE/pytest-xmlcomp.svg?branch=master
+    :target: https://travis-ci.org/openSUSE/pytest-xmlcomp
     :alt: See Build Status on Travis CI
-
-.. image:: https://ci.appveyor.com/api/projects/status/github/Lightlace/pytest-xmlcomp?branch=master
-    :target: https://ci.appveyor.com/project/Lightlace/pytest-xmlcomp/branch/master
-    :alt: See Build Status on AppVeyor
 
 A simple plugin comparing XML files.
 
@@ -34,7 +30,14 @@ Features
 Requirements
 ------------
 
-* TODO
+* pytest
+* lxml
+* tox
+* bumpversion
+* check-manifest
+* flake8
+* isort
+* wheel
 
 
 Installation
