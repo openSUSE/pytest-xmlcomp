@@ -1,0 +1,44 @@
+language: python
+sudo: false
+env:
+  global:
+    - LD_PRELOAD=/lib/x86_64-linux-gnu/libSegFault.so
+    - SEGFAULT_SIGNALS=all
+
+matrix:
+  include:
+    - env: TOXENV=flake8
+    - env: TOXENV=3.4
+      python: 3.4
+    - env: TOXENV=3.5
+      python: 3.5
+    - env: TOXENV=3.6
+      python: 3.6
+
+before_install:
+  - python3 --version
+  - uname -a
+  - lsb_release -a
+  - virtualenv --version
+  - easy_install --version
+  - pip --version
+  - tox --version
+
+install:
+  # - pip install -U pip setuptools
+  - pip install -r dev-requirements.pip
+
+script:
+    - tox -v
+
+before_cache:
+  - rm -rf $HOME/.cache/pip/log
+
+cache:
+  directories:
+    - $HOME/.cache/pip
+
+notifications:
+  email:
+    on_success: never
+    on_failure: always
