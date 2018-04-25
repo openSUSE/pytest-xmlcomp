@@ -6,6 +6,8 @@
 Welcome to pytest-xmlcomp's documentation!
 ===============================================================
 
+Version: 0.2.0
+
 Contents:
 
 .. toctree::
