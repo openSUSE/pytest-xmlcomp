@@ -10,6 +10,7 @@ def read(fname):
     file_path = os.path.join(os.path.dirname(__file__), fname)
     return codecs.open(file_path, encoding='utf-8').read()
 
+
 def requires(filename):
     """Returns a list of all pip requirements, but ignores empty lines or
        lines starting with '#' or '-'
@@ -26,6 +27,7 @@ def requires(filename):
             modules.append(line)
     return modules
 
+
 setup(
     name='pytest-xmlcomp',
     version='0.2.0',
@@ -39,7 +41,7 @@ setup(
     long_description=read('README.rst'),
     py_modules=['pytest_xmlcomp'],
     python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*',
-    install_requires=requires(os.path.abspath("requirements.pip")), #['pytest>=3.5.0']
+    install_requires=requires(os.path.abspath("requirements.pip")),
     classifiers=[
         'Development Status :: 1 - Planning',
         'Framework :: Pytest',
