@@ -8,11 +8,11 @@ import pytest
 def pytest_addoption(parser):
     group = parser.getgroup('xmlcomp')
     group.addoption(
-        '--foo',
+        '--datadir',
         action='store',
-        dest='dest_foo',
-        default='2018',
-        help='Set the value for the fixture "bar".'
+        dest='datadir',
+        default='data',
+        help='Give the directory containing the XML files.'
     )
 
     parser.addini('HELLO', 'Dummy pytest.ini setting')
@@ -20,4 +20,4 @@ def pytest_addoption(parser):
 
 @pytest.fixture
 def bar(request):
-    return request.config.option.dest_foo
+    return request.config.option.datadir
