@@ -2,7 +2,7 @@
 pytest-xmlcomp
 ==============
 
-Version: 0.1.0
+Version: 0.2.0
 
 .. image:: https://img.shields.io/pypi/v/pytest-xmlcomp.svg
     :target: https://pypi.org/project/pytest-xmlcomp

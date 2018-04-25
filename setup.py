@@ -28,7 +28,7 @@ def requires(filename):
 
 setup(
     name='pytest-xmlcomp',
-    version='0.1.0',
+    version='0.2.0',
     author='Fabian Baumanis',
     author_email='fabian.baumanis@suse.com',
     maintainer='Fabian Baumanis',
