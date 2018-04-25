@@ -10,7 +10,7 @@ pytest-xmlcomp
     :target: https://pypi.org/project/pytest-xmlcomp
     :alt: Python versions
 
-.. image:: https://travis-ci.org/openSUSE/pytest-xmlcomp.svg?branch=master
+.. image:: https://travis-ci.org/openSUSE/pytest-xmlcomp.svg?branch=develop
     :target: https://travis-ci.org/openSUSE/pytest-xmlcomp
     :alt: See Build Status on Travis CI
 
