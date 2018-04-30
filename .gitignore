@@ -28,6 +28,8 @@ wheels/
 *.egg
 *.swp
 *.swo
+*.swn
+*.swm
 
 # PyInstaller
 #  Usually these files are written by a python script from a template

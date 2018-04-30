@@ -24,6 +24,7 @@ def test_bar_fixture(testdir):
     # make sure that that we get a '0' exit code for the testsuite
     assert result.ret == 0
 
+
 def test_check_for_files_fixture(testdir):
     from py.path import local
     p = local(__file__).dirpath("data")
@@ -39,7 +40,24 @@ def test_check_for_files_fixture(testdir):
         '*::test_check_for_files_fixture PASSED*',
     ])
     assert result.ret == 0
-    
+
+
+def test_compare_xml_with_json_fixture(testdir):
+    from py.path import local
+    p = local(__file__).dirpath("data")
+    targetdata = testdir.tmpdir.mkdir("data")
+    for f in p.listdir():
+        f.copy(targetdata)
+    testdir.makepyfile("""
+        def test_compare_xml_with_json_fixture(compare_xml_with_json):
+            assert compare_xml_with_json
+        """)
+    result = testdir.runpytest('--datadir=data', '-v')
+    result.stdout.fnmatch_lines([
+        '*::test_compare_xml_with_json_fixture PASSED*',
+    ])
+    assert result.ret == 0
+
 
 def test_help_message(testdir):
     result = testdir.runpytest(

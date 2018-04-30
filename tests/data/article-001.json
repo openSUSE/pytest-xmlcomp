@@ -1,9 +1,5 @@
-{
-  "testdata": [
-    {
-      "/doc": true,
-      "/doc/foo": true,
-      "/doc/bar": true
-    }
-  ]
-}
+[
+			["/doc", true],
+      ["/doc/foo", true],
+      ["/doc/bar", true]
+]
