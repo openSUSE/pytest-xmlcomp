@@ -33,7 +33,7 @@ def check_for_files(request):
     # iterate over the file list
 
     def xml_filter(x):
-        if x.ext==".xml":
+        if x.ext == ".xml":
             return x
     for f in p.listdir(fil=xml_filter):
         out = f.new(ext=".out")
@@ -53,9 +53,9 @@ def compare_xml_with_json(request):
     # create Pathlib object for the given data directory
     p = local(request.config.option.datadir)
     # iterate over Pathlib object
-    
+
     def xml_filter(x):
-        if x.ext==".xml":
+        if x.ext == ".xml":
             return x
     for f in p.listdir(fil=xml_filter):
         root = etree.parse(str(f))
