@@ -4,6 +4,9 @@ __version__ = "0.2.0"
 
 import pytest
 from py.path import local
+import json
+from lxml import etree
+
 
 def pytest_addoption(parser):
     group = parser.getgroup('xmlcomp')
@@ -21,24 +24,45 @@ def pytest_addoption(parser):
 def bar(request):
     return request.config.option.datadir
 
+
 @pytest.fixture
 def check_for_files(request):
     result = []
     # create Pathlib object for the given data directory
     p = local(request.config.option.datadir)
-    # create filter for listdir function
+    # iterate over the file list
+
     def xml_filter(x):
-        if x.ext == ".xml":
+        if x.ext==".xml":
             return x
-    #iterate over the file list
     for f in p.listdir(fil=xml_filter):
-        out = f.new(ext = ".out")
+        out = f.new(ext=".out")
         if not out.exists():
             print("No output files found")
             continue
-        err = f.new(ext = ".err")
+        err = f.new(ext=".err")
         if not err.exists():
-            result.append((f,out,None))
+            result.append((f, out, None))
         else:
-            result.append((f,out,err))
+            result.append((f, out, err))
     return result
+
+
+@pytest.fixture
+def compare_xml_with_json(request):
+    # create Pathlib object for the given data directory
+    p = local(request.config.option.datadir)
+    # iterate over Pathlib object
+    
+    def xml_filter(x):
+        if x.ext==".xml":
+            return x
+    for f in p.listdir(fil=xml_filter):
+        root = etree.parse(str(f))
+        j = f.new(ext=".json")
+        jsondata = json.load(open(j))
+    for xpath, expresult in jsondata:
+        res = root.xpath(xpath)
+        if not res:
+            raise ValueError("XPath is not in XML file!")
+    return True
