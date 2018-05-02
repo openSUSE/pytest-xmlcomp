@@ -55,7 +55,7 @@ def compare_xml_with_json(request):
     for f in p.listdir(fil=xml_filter):
         root = etree.parse(str(f))
         j = f.new(ext=".json")
-        jsondata = json.load(open(j))
+        jsondata = json.load(open(str(j)))
     for xpath, expresult in jsondata:
         res = root.xpath(xpath)
         if not res:
