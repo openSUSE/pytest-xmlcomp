@@ -61,6 +61,22 @@ def test_check_for_files_noXML_fixture(testdir):
     assert result.ret == 1
 
 
+def test_check_for_files_noJSON_fixture(testdir):
+    from py.path import local
+    p = local(__file__).dirpath("data")
+    targetdata = testdir.tmpdir.mkdir("data")
+    for f in p.listdir():
+        if f.ext == ".json":
+            continue
+        f.copy(targetdata)
+    testdir.makepyfile("""
+        def test_check_for_files_fixture(check_for_files):
+            assert check_for_files
+        """)
+    result = testdir.runpytest('--datadir=data', '-v')
+    assert result.ret == 1
+
+
 def test_compare_xml_with_json_fixture(testdir):
     from py.path import local
     p = local(__file__).dirpath("data")
