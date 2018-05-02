@@ -38,7 +38,7 @@ def check_for_files(request):
     for f in p.listdir(fil=xml_filter):
         json = f.new(ext=".json")
         if not json.exists():
-            raise ValueError ("JSON file not found!")
+            raise ValueError("JSON file not found!")
         result.append((f, json))
     return result
 
