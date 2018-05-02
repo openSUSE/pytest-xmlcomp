@@ -26,7 +26,7 @@ def bar(request):
 
 
 @pytest.fixture
-def check_for_files(request):
+def xmljsonfiles(request):
     result = []
     # create Pathlib object for the given data directory
     p = local(request.config.option.datadir)

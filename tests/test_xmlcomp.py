@@ -25,24 +25,24 @@ def test_bar_fixture(testdir):
     assert result.ret == 0
 
 
-def test_check_for_files_fixture(testdir):
+def test_xmljsonfiles_fixture(testdir):
     from py.path import local
     p = local(__file__).dirpath("data")
     targetdata = testdir.tmpdir.mkdir("data")
     for f in p.listdir():
         f.copy(targetdata)
     testdir.makepyfile("""
-        def test_check_for_files_fixture(check_for_files):
-            assert check_for_files
+        def test_xmljsonfiles_fixture(xmljsonfiles):
+            assert xmljsonfiles
         """)
     result = testdir.runpytest('--datadir=data', '-v')
     result.stdout.fnmatch_lines([
-        '*::test_check_for_files_fixture PASSED*',
+        '*::test_xmljsonfiles_fixture PASSED*',
     ])
     assert result.ret == 0
 
 
-def test_check_for_files_noXML_fixture(testdir):
+def test_xmljsonfiles_noXML_fixture(testdir):
     from py.path import local
     p = local(__file__).dirpath("data")
     targetdata = testdir.tmpdir.mkdir("data")
@@ -51,17 +51,17 @@ def test_check_for_files_noXML_fixture(testdir):
             continue
         f.copy(targetdata)
     testdir.makepyfile("""
-        def test_check_for_files_fixture(check_for_files):
-            assert check_for_files
+        def test_xmljsonfiles_fixture(xmljsonfiles):
+            assert xmljsonfiles
         """)
     result = testdir.runpytest('--datadir=data', '-v')
     result.stdout.fnmatch_lines([
-        '*::test_check_for_files_fixture FAILED*',
+        '*::test_xmljsonfiles_fixture FAILED*',
     ])
     assert result.ret == 1
 
 
-def test_check_for_files_noJSON_fixture(testdir):
+def test_xmljsonfiles__noJSON_fixture(testdir):
     from py.path import local
     p = local(__file__).dirpath("data")
     targetdata = testdir.tmpdir.mkdir("data")
@@ -70,8 +70,8 @@ def test_check_for_files_noJSON_fixture(testdir):
             continue
         f.copy(targetdata)
     testdir.makepyfile("""
-        def test_check_for_files_fixture(check_for_files):
-            assert check_for_files
+        def test_xmljsonfiles_fixture(xmljsonfiles):
+            assert xmljsonfiles
         """)
     result = testdir.runpytest('--datadir=data', '-v')
     assert result.ret == 1
