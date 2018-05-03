@@ -27,6 +27,11 @@ def bar(request):
 
 @pytest.fixture
 def xmljsonfiles(request):
+    """Return a tuple with the XML and JSON file found in the given directory.
+
+    Arguments:
+    request -- directory which contains the XML and JSON files"""
+    
     result = []
     # create Pathlib object for the given data directory
     p = local(request.config.option.datadir)
@@ -43,19 +48,14 @@ def xmljsonfiles(request):
     return result
 
 
-@pytest.fixture
-def compare_xml_with_json(request):
-    # create Pathlib object for the given data directory
-    p = local(request.config.option.datadir)
-    # iterate over Pathlib object
+def compare_xml_with_json(xmljsonfiles):
+    """ Looks if the XPath objects defined in the JSON files exist in the XML file.
+    Arguments:
+    xmljsonfiles -- Tuple with XML and JSON files"""
 
-    def xml_filter(x):
-        if x.ext == ".xml":
-            return x
-    for f in p.listdir(fil=xml_filter):
-        root = etree.parse(str(f))
-        j = f.new(ext=".json")
-        jsondata = json.load(open(str(j)))
+    for xmlfile, jsonfile in xmljsonfiles:
+        root = etree.parse(str(xmlfile))
+        jsondata = json.load(open(str(jsonfile)))
     for xpath, expresult in jsondata:
         res = root.xpath(xpath)
         if not res:
