@@ -77,19 +77,20 @@ def test_xmljsonfiles__noJSON_fixture(testdir):
     assert result.ret == 1
 
 
-def test_compare_xml_with_json_fixture(testdir):
+def test_compare_xml_with_json(testdir):
     from py.path import local
     p = local(__file__).dirpath("data")
     targetdata = testdir.tmpdir.mkdir("data")
     for f in p.listdir():
         f.copy(targetdata)
     testdir.makepyfile("""
-        def test_compare_xml_with_json_fixture(compare_xml_with_json):
-            assert compare_xml_with_json
+        import pytest_xmlcomp as py_x
+        def test_compare_xml_with_json(xmljsonfiles):
+            assert py_x.compare_xml_with_json(xmljsonfiles)
         """)
     result = testdir.runpytest('--datadir=data', '-v')
     result.stdout.fnmatch_lines([
-        '*::test_compare_xml_with_json_fixture PASSED*',
+        '*::test_compare_xml_with_json PASSED*',
     ])
     assert result.ret == 0
 
