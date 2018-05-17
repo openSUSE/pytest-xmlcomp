@@ -35,15 +35,34 @@ class XPathItem(pytest.Item):
         self.xpath = self.name
         self.tree = tree
         self.root = tree.getroot()
-    
+
     def runtest(self):
         res = self.tree.xpath(self.xpath)
-        print (bool(res))
-        print (type(res))
+        print (bool(res), type(res), res, self.expresult )
         if isinstance(res, (float, str)):
+            print("res != expresult =>", res != self.expresult)
             if res != self.expresult:
-                ValueError("XPath %s is not in XML file %s !" % (self.xpath, self.tree.docinfo.URL))
+                raise XPathError(self.xpath, res, self.expresult, self.tree.docinfo.URL)
         elif isinstance(res, list):
             if bool(res) == bool(self.expresult):
-                ValueError("XPath %s is not in XML file %s !" % (self.xpath, self.tree.docinfo.URL))
+                raise XPathError(self.xpath, res, self.expresult, self.tree.docinfo.URL)
         return True
+
+    def repr_failure(self, excinfo):
+        """ called when self.runtest() raises an exception. """
+        if isinstance(excinfo.value, XPathError):
+            return "\n".join([
+                "XPath execution failed",
+                "           file: %r" % excinfo.value.args[-1],
+                "   XPath failed: %r:" % excinfo.value.args[0],
+                "         result: %s" % excinfo.value.args[1],
+                "       expected: %s" % excinfo.value.args[2],
+            ])
+
+    def reportinfo(self):
+        return self.fspath, 0, "XPath: %s" % self.name
+
+
+class XPathError(Exception):
+    """XPath Evaluation Error"""
+    pass
