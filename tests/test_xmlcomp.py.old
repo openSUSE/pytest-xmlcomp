@@ -1,0 +1,83 @@
+# -*- coding: utf-8 -*-
+
+
+def test_xmljsonfiles_fixture(testdir):
+    from py.path import local
+    p = local(__file__).dirpath("data")
+    targetdata = testdir.tmpdir.mkdir("data")
+    for f in p.listdir():
+        f.copy(targetdata)
+    testdir.makepyfile("""
+        def test_xmljsonfiles_fixture(xmljsonfiles):
+            assert xmljsonfiles
+        """)
+    result = testdir.runpytest('--datadir=data', '-v')
+    result.stdout.fnmatch_lines([
+        '*::test_xmljsonfiles_fixture PASSED*',
+    ])
+    assert result.ret == 0
+
+
+def test_xmljsonfiles_noXML_fixture(testdir):
+    from py.path import local
+    p = local(__file__).dirpath("data")
+    targetdata = testdir.tmpdir.mkdir("data")
+    for f in p.listdir():
+        if f.ext == ".xml":
+            continue
+        f.copy(targetdata)
+    testdir.makepyfile("""
+        def test_xmljsonfiles_fixture(xmljsonfiles):
+            assert xmljsonfiles
+        """)
+    result = testdir.runpytest('--datadir=data', '-v')
+    result.stdout.fnmatch_lines([
+        '*::test_xmljsonfiles_fixture FAILED*',
+    ])
+    assert result.ret == 1
+
+
+def test_xmljsonfiles__noJSON_fixture(testdir):
+    from py.path import local
+    p = local(__file__).dirpath("data")
+    targetdata = testdir.tmpdir.mkdir("data")
+    for f in p.listdir():
+        if f.ext == ".json":
+            continue
+        f.copy(targetdata)
+    testdir.makepyfile("""
+        def test_xmljsonfiles_fixture(xmljsonfiles):
+            assert xmljsonfiles
+        """)
+    result = testdir.runpytest('--datadir=data', '-v')
+    assert result.ret == 1
+
+
+def test_compare_xml_with_json(testdir):
+    from py.path import local
+    p = local(__file__).dirpath("data")
+    targetdata = testdir.tmpdir.mkdir("data")
+    for f in p.listdir():
+        f.copy(targetdata)
+    testdir.makepyfile("""
+        import pytest_xmlcomp as py_x
+        def test_compare_xml_with_json(xmljsonfiles):
+            assert py_x.compare_xml_with_json(xmljsonfiles)
+        """)
+    result = testdir.runpytest('--datadir=data', '-v')
+    result.stdout.fnmatch_lines([
+        '*::test_compare_xml_with_json PASSED*',
+    ])
+    assert result.ret == 0
+
+
+def test_help_message(testdir):
+    result = testdir.runpytest(
+        '--help',
+    )
+    # fnmatch_lines does an assertion internally
+    result.stdout.fnmatch_lines([
+        'xmlcomp:',
+        '*--datadir=DATADIR*Give the directory containing the XML files.',
+    ])
+
