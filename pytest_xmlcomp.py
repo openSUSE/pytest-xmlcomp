@@ -13,6 +13,20 @@ def pytest_collect_file(parent, path):
         print("XML file %s and JSON file %s found" % (path, jsonfile))
         return XMLJSONFile(path, parent)
 
+def stringifylist(res):
+        result = []
+        for obj in res:
+            if isinstance(obj, (etree._Comment, etree._ProcessingInstruction)):
+                result.append(str(obj))
+            elif isinstance(obj, etree._ElementTree):
+                result.append('/') # FIXME
+            elif isinstance(obj, etree._Element):
+                result.append("<%s>" %obj.tag)
+            elif isinstance(obj, str):
+                result.append(obj)
+        return result
+
+
 class XMLJSONFile(pytest.File):
     def collect(self):
         from lxml import etree
@@ -35,17 +49,15 @@ class XPathItem(pytest.Item):
         self.xpath = self.name
         self.tree = tree
         self.root = tree.getroot()
+        print (self.root)
 
     def runtest(self):
         res = self.tree.xpath(self.xpath)
-        print (bool(res), type(res), res, self.expresult )
-        if isinstance(res, (float, str)):
-            print("res != expresult =>", res != self.expresult)
+        print (bool(res), type(res), res, self.expresult)
+        if isinstance(res, list):
+            res = stringifylist(res)
             if res != self.expresult:
-                raise XPathError(self.xpath, res, self.expresult, self.tree.docinfo.URL)
-        elif isinstance(res, list):
-            if bool(res) == bool(self.expresult):
-                raise XPathError(self.xpath, res, self.expresult, self.tree.docinfo.URL)
+                 raise XPathError(self.xpath, res, self.expresult, self.tree.docinfo.URL)
         return True
 
     def repr_failure(self, excinfo):
