@@ -1,133 +1,53 @@
 # -*- coding: utf-8 -*-
 
+from pytest_xmlcomp.plugin import stringifylist
+from lxml import etree
+import pytest
 
-def test_bar_fixture(testdir):
-    """Make sure that pytest accepts our fixture."""
 
-    # create a temporary pytest test module
-    testdir.makepyfile("""
-        def test_sth(bar):
-            assert bar == "europython2015"
-    """)
-
-    # run pytest with the following cmd args
-    result = testdir.runpytest(
-        '--datadir=europython2015',
-        '-v'
-    )
-
-    # fnmatch_lines does an assertion internally
-    result.stdout.fnmatch_lines([
-        '*::test_sth PASSED*',
-    ])
-
-    # make sure that that we get a '0' exit code for the testsuite
+def test_pytest_collect_good_files(good_dir):
+    result = good_dir.runpytest("-vs")
     assert result.ret == 0
 
 
-def test_xmljsonfiles_fixture(testdir):
-    from py.path import local
-    p = local(__file__).dirpath("data")
-    targetdata = testdir.tmpdir.mkdir("data")
-    for f in p.listdir():
-        f.copy(targetdata)
-    testdir.makepyfile("""
-        def test_xmljsonfiles_fixture(xmljsonfiles):
-            assert xmljsonfiles
-        """)
-    result = testdir.runpytest('--datadir=data', '-v')
-    result.stdout.fnmatch_lines([
-        '*::test_xmljsonfiles_fixture PASSED*',
+def test_pytest_collect_bad_files(bad_dir):
+    result = bad_dir.runpytest()
+    assert result.ret == 1
+
+
+@pytest.mark.parametrize("test_input, expected", [
+        ([etree.Comment('foobar')], ['<!--foobar-->']),
+        ([etree.ProcessingInstruction("instruction")], ['<?instruction?>']),
+        ([etree.Element('foobar')], ['<foobar>']),
+        (['simplestring'], ['simplestring']),
+        ([etree._ElementUnicodeResult("foo")], ['foo'])
     ])
+def test_stringifylist(test_input, expected):
+    res = stringifylist(test_input)
+    assert res == expected
+
+
+def test_repr_failure_good_data(good_dir):
+    result = good_dir.runpytest()
     assert result.ret == 0
 
 
-def test_xmljsonfiles_noXML_fixture(testdir):
-    from py.path import local
-    p = local(__file__).dirpath("data")
-    targetdata = testdir.tmpdir.mkdir("data")
-    for f in p.listdir():
-        if f.ext == ".xml":
-            continue
-        f.copy(targetdata)
-    testdir.makepyfile("""
-        def test_xmljsonfiles_fixture(xmljsonfiles):
-            assert xmljsonfiles
-        """)
-    result = testdir.runpytest('--datadir=data', '-v')
+def test_repr_failure_bad_data(bad_dir):
+    result = bad_dir.runpytest()
     result.stdout.fnmatch_lines([
-        '*::test_xmljsonfiles_fixture FAILED*',
+        "XPath execution failed"
     ])
     assert result.ret == 1
 
 
-def test_xmljsonfiles__noJSON_fixture(testdir):
-    from py.path import local
-    p = local(__file__).dirpath("data")
-    targetdata = testdir.tmpdir.mkdir("data")
-    for f in p.listdir():
-        if f.ext == ".json":
-            continue
-        f.copy(targetdata)
-    testdir.makepyfile("""
-        def test_xmljsonfiles_fixture(xmljsonfiles):
-            assert xmljsonfiles
-        """)
-    result = testdir.runpytest('--datadir=data', '-v')
-    assert result.ret == 1
-
-
-def test_compare_xml_with_json_fixture(testdir):
-    from py.path import local
-    p = local(__file__).dirpath("data")
-    targetdata = testdir.tmpdir.mkdir("data")
-    for f in p.listdir():
-        f.copy(targetdata)
-    testdir.makepyfile("""
-        def test_compare_xml_with_json_fixture(compare_xml_with_json):
-            assert compare_xml_with_json
-        """)
-    result = testdir.runpytest('--datadir=data', '-v')
-    result.stdout.fnmatch_lines([
-        '*::test_compare_xml_with_json_fixture PASSED*',
-    ])
-    assert result.ret == 0
-
-
-def test_help_message(testdir):
-    result = testdir.runpytest(
-        '--help',
-    )
-    # fnmatch_lines does an assertion internally
-    result.stdout.fnmatch_lines([
-        'xmlcomp:',
-        '*--datadir=DATADIR*Give the directory containing the XML files.',
-    ])
-
-
-def test_hello_ini_setting(testdir):
-    testdir.makeini("""
-        [pytest]
-        HELLO = world
+def test_pytest_transform_xml(good_dir):
+    good_dir.makeconftest("""
+    def pytest_transform_xml(xmlfile):
+        print("OVERWRITTEN")
+        return xmlfile
     """)
-
-    testdir.makepyfile("""
-        import pytest
-
-        @pytest.fixture
-        def hello(request):
-            return request.config.getini('HELLO')
-
-        def test_hello_world(hello):
-            assert hello == 'world'
-    """)
-
-    result = testdir.runpytest('-v')
-
-    # fnmatch_lines does an assertion internally
+    result = good_dir.runpytest("-sv")
     result.stdout.fnmatch_lines([
-        '*::test_hello_world PASSED*',
+        "OVERWRITTEN"
     ])
-
-    # make sure that that we get a '0' exit code for the testsuite
     assert result.ret == 0
