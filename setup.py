@@ -3,7 +3,7 @@
 
 import os
 import codecs
-from setuptools import setup
+from setuptools import setup, find_packages
 
 
 def read(fname):
@@ -39,7 +39,7 @@ setup(
     url='https://github.com/openSUSE/pytest-xmlcomp',
     description='A simple plugin comparing XML files.',
     long_description=read('README.rst'),
-    py_modules=['pytest_xmlcomp'],
+    packages=find_packages(),
     python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*',
     install_requires=requires(os.path.abspath("requirements.pip")),
     classifiers=[
@@ -59,7 +59,7 @@ setup(
     ],
     entry_points={
         'pytest11': [
-            'xmlcomp = pytest_xmlcomp',
+                  'pytest-xmlcomp = pytest_xmlcomp.plugin',
         ],
     },
 )
