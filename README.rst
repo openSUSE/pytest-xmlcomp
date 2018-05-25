@@ -16,7 +16,7 @@ Version: 0.3.0
     :target: https://travis-ci.org/openSUSE/pytest-xmlcomp
     :alt: See Build Status on Travis CI
 
-A simple plugin comparing XML files.
+A simple plugin comparing XML files. Work in progress.
 
 ----
 
