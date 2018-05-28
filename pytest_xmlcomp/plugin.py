@@ -74,16 +74,13 @@ class XMLJSONFile(pytest.File):
         Modify the XML files via a custom hook and parse the JSON.
         Returns: It returns XPath items which are found in the JSON file.
         """
-        from lxml import etree
         import json
-        originalxmlfile = self.fspath
+        xmlfile = self.fspath
+        print(self.fspath)
         pm = self.config.pluginmanager
-        modifiedxmlfile = pm.hook.pytest_transform_xml(xmlfile=originalxmlfile)
-        try:
-            tree = etree.parse(str(modifiedxmlfile[0]))
-        except etree.XMLSyntaxError:
-            print("XML Syntax Error in file %s" % self.fspath)
-            return False
+        tree = pm.hook.pytest_xmlcomp_transform_xml(xmlfile=str(xmlfile))
+        if tree is None:
+            return
         jsonfile = self.fspath.new(ext='.json')
         jsondata = json.load(open(str(jsonfile)))
         for xpath, expresult in jsondata:
@@ -106,8 +103,8 @@ class XPathItem(pytest.Item):
         super().__init__(xpath, parent)
         self.expresult = expresult
         self.xpath = self.name
-        self.tree = tree
-        self.root = tree.getroot()
+        self.tree = tree[0]
+        self.root = tree[0].getroot()
         print(self.root)
 
     def runtest(self):
