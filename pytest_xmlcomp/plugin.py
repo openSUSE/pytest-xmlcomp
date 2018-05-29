@@ -5,6 +5,7 @@ __version__ = "0.3.0"
 import pytest
 from lxml import etree
 from pytest_xmlcomp import hooks
+import sys
 
 
 def pytest_addoption(parser):
@@ -82,7 +83,12 @@ class XMLJSONFile(pytest.File):
         if tree is None:
             return
         jsonfile = self.fspath.new(ext='.json')
-        jsondata = json.load(open(str(jsonfile)))
+        try:
+            jsondata = json.load(open(str(jsonfile)))
+        except json.decoder.JSONDecodeError as error:
+            print("JSON Syntax Error in file %s:\n%s" % (jsonfile, error),
+                  file=sys.stderr)
+            return
         for xpath, expresult in jsondata:
             yield XPathItem(xpath, self, expresult, tree)
 

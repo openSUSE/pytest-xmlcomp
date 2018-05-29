@@ -51,9 +51,17 @@ def test_pytest_xmlcomp_transform_xml(good_dir):
     assert result.ret == 0
 
 
-def test_XMLSyntaxError(synerror_dir):
-    result = synerror_dir.runpytest("-sv")
+def test_XMLSyntaxError(xml_synerror_dir):
+    result = xml_synerror_dir.runpytest("-sv")
     result.stderr.fnmatch_lines([
         "XML Syntax Error in file*"
         ])
     assert result.ret == 2
+
+
+def test_JSONSyntaxError(json_synerror_dir):
+    result = json_synerror_dir.runpytest("-sv")
+    result.stderr.fnmatch_lines([
+        "JSON Syntax Error in file*"
+        ])
+    assert result.ret == 5

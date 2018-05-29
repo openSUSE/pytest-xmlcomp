@@ -5,8 +5,8 @@ pytest_plugins = 'pytester'
 
 GOOD_DATA = local(__file__).dirpath("data/good/")
 BAD_DATA = local(__file__).dirpath("data/bad/")
-SYNTAX_ERROR_DATA = local(__file__).dirpath("data/syn_error")
-
+XML_SYNTAX_ERROR_DATA = local(__file__).dirpath("data/xml_syn_error")
+JSON_SYNTAX_ERROR_DATA = local(__file__).dirpath("data/json_syn_error")
 
 @pytest.fixture
 def good_dir(testdir):
@@ -25,8 +25,16 @@ def bad_dir(testdir):
 
 
 @pytest.fixture
-def synerror_dir(testdir):
-    synerror_dir = testdir.tmpdir.mkdir("syntax_error_data")
-    for f in SYNTAX_ERROR_DATA.listdir():
-        f.copy(synerror_dir)
+def xml_synerror_dir(testdir):
+    xml_synerror_dir = testdir.tmpdir.mkdir("xml_syntax_error_data")
+    for f in XML_SYNTAX_ERROR_DATA.listdir():
+        f.copy(xml_synerror_dir)
+    return testdir
+
+
+@pytest.fixture
+def json_synerror_dir(testdir):
+    json_synerror_dir = testdir.tmpdir.mkdir("json_syntax_error_data")
+    for f in JSON_SYNTAX_ERROR_DATA.listdir():
+        f.copy(json_synerror_dir)
     return testdir
