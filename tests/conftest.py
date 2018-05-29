@@ -5,6 +5,7 @@ pytest_plugins = 'pytester'
 
 GOOD_DATA = local(__file__).dirpath("data/good/")
 BAD_DATA = local(__file__).dirpath("data/bad/")
+SYNTAX_ERROR_DATA = local(__file__).dirpath("data/syn_error")
 
 
 @pytest.fixture
@@ -20,4 +21,12 @@ def bad_dir(testdir):
     baddata_dir = testdir.tmpdir.mkdir("baddata")
     for f in BAD_DATA.listdir():
         f.copy(baddata_dir)
+    return testdir
+
+
+@pytest.fixture
+def synerror_dir(testdir):
+    synerror_dir = testdir.tmpdir.mkdir("syntax_error_data")
+    for f in SYNTAX_ERROR_DATA.listdir():
+        f.copy(synerror_dir)
     return testdir

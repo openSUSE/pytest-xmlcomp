@@ -40,14 +40,20 @@ def test_repr_failure_bad_data(bad_dir):
     assert result.ret == 1
 
 
-def test_pytest_transform_xml(good_dir):
+def test_pytest_xmlcomp_transform_xml(good_dir):
     good_dir.makeconftest("""
-    def pytest_transform_xml(xmlfile):
-        print("OVERWRITTEN")
-        return xmlfile
+    def pytest_xmlcomp_transform_xml(xmlfile):
+        from lxml import etree
+        tree = etree.parse(source = str(xmlfile))
+        return tree
     """)
     result = good_dir.runpytest("-sv")
-    result.stdout.fnmatch_lines([
-        "OVERWRITTEN"
-    ])
     assert result.ret == 0
+
+
+def test_XMLSyntaxError(synerror_dir):
+    result = synerror_dir.runpytest("-sv")
+    result.stderr.fnmatch_lines([
+        "XML Syntax Error in file*"
+        ])
+    assert result.ret == 2
