@@ -25,14 +25,13 @@ Version: 0.3.0
    The input XML file is transformed and the result is checked against XPath expressions.
 
 
-A simple plugin comparing XML files. Work in progress.
+A simple plugin for comparing XML files with thepytest framework.
+The input XML file is modified with a user-defined function and the result is checked against XPath expressions.
+
+This `pytest`_ plugin was generated with `Cookiecutter`_ along with `@hackebrot`_'s `cookiecutter-pytest-plugin`_ template.
 
 ----
 
-.. Maybe move this paragraph into the one of the following sections.
-
-pytest-xmlcomp is a plugin for `pytest`, which takes a XML file and modifies it with a user-defined function in a hook.
-Then it takes user-expected XPath expressions from a JSON file and checks if they are available in the modified XML file.
 
 This `pytest`_ plugin was generated with `Cookiecutter`_ along with `@hackebrot`_'s `cookiecutter-pytest-plugin`_ template.
 
@@ -44,8 +43,9 @@ Features
    (input and result), you compare only the result file against your XPath expressions.
    => Better rephrase it so it is clear what you mean
 
-- compares two XML files based on XPath expressions
-- XPath expressions can be retrieved from a JSON file
+pytest-xmlcomp is a plugin for `pytest`, which takes a XML file and modifies it with a user-defined function in a hook.
+Then it takes user-expected XPath expressions from a JSON file and checks if they are available in the modified XML file.
+
 
 
 Requirements
@@ -57,12 +57,6 @@ Requirements
 
 * pytest
 * lxml
-* tox
-* bumpversion
-* check-manifest
-* flake8
-* isort
-* wheel
 
 
 Installation
@@ -76,50 +70,43 @@ You can install `pytest-xmlcomp` via `pip install` from the GitHub repository::
 Purpose
 -------
 
-.. It would be helpful, if you make a list what you need. Maybe something like this:
-   Make sure you have:
-   * a input XML file
-   * a hook which modifies/transforms your XML file into another XML file ("result XML")
-   * a JSON file which contains XPath expressions you want to check against your result XML.
-   All the requirements are explained in the following sections.
-
-First of all ensure, that you have an input XML file, a hook which modifies your input XML file and a valid JSON file, which contains the XPath
-expressions you want to check. 
+Make sure you have:
+* a input XML file
+* a hook which modifies your input XML file into a 'result' XML file
+* a valid JSON file, which contains the XPath expressions you want to check against.
 
 
 Hooks
 -----
 
-.. I have some issues:
-   1. Well, actually you can't define your own hook in pytest_xmlcomp/hooks.py.
-      You need to define it in conftest.py
-   2. "will be called", better use "is called" or "pytest calls ..."
-   3. Remove "in order to..."
-
-In pytest_xmlcomp/hooks.py, you can define a custom hook, which will be called in order to modify your XML input file.
-This is absolutely important in order to run pytest-xmlcomp properly.
+In tests/conftest.py, you can define a custom hook, which is called to modify your XML input file.
+This is absolutely important to run pytest-xmlcomp properly.
 
 
 Generating XPath Expressions
 ----------------------------
 
-.. Replace "You can define..." with "Define your XPath..."
+Define your XPath expressions in a JSON file, which can be found in the data directory.
 
-You can define the XPath expressions in a JSON file, which can be found in the data directory.
+Example:
 
-.. Don't say "please". :) You only say that, if you want something from
-   your readers. Start with "Make sure..."
-   Maybe add an example.
+[
+      ["/doc", ["<doc>"]],
+      ["/doc/foo", ["<foo>"]],
+      ["/doc/bar", ["<bar>"]]
+]
 
-Please make sure that the JSON file has the same basename as the XML file.
+Make sure that the JSON file has the same basename as the XML file.
 A introduction to the JSON file format can be found here: `www.json.org`_
 
-.. You can't "validate" a JSON file, you can only check if it adheres
-   to its syntax.
-
-You can also validate your JSON file before running pytest-xmlcomp. Just run::
+You can also check if your JSON file adheres to its syntax before running pytest-xmlcomp. Just run::
 
     $ python3 -m json.tool foo.json
+
+Here is an example for a directory structure:
+* tests/conftest.py -- define your custom hook here
+* tests/data/foo -- you can place you input XML file and your JSON file here
+
 
 
 .. I would suggest to add an example *how* you can integrate it into your own project
