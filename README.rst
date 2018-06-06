@@ -20,13 +20,17 @@ A simple plugin comparing XML files. Work in progress.
 
 ----
 
+pytest-xmlcomp is a plugin for `pytest`_, which takes a XML file and modifies it with a user-defined function in a hook.
+Then it takes user-expected XPath expressions from a JSON file and checks if they are available in the modified XML file.
+
 This `pytest`_ plugin was generated with `Cookiecutter`_ along with `@hackebrot`_'s `cookiecutter-pytest-plugin`_ template.
 
 
 Features
 --------
 
-* TODO
+- compares two XML files based on XPath expressions
+- XPath expressions can be retrieved from a JSON file
 
 
 Requirements
@@ -45,15 +49,30 @@ Requirements
 Installation
 ------------
 
-You can install "pytest-xmlcomp" via `pip`_ from `PyPI`_::
+You can install "pytest-xmlcomp" via `pip install`_ from the `GitHub` repository_::
 
-    $ pip install pytest-xmlcomp
+    $ pip install git+https://github.com/openSUSE/pytest-xmlcomp.git@develop
 
 
 Usage
 -----
 
-* TODO
+First of all ensure, that you have an input XML file, a hook which modifies your input XML file and a valid JSON file, which contains the XPath
+expressions you want to check. 
+
+
+Hooks
+-----
+In pytest_xmlcomp/hooks.py, you can define a custom hook, which will be called in order to modify your XML input file.
+This is absolutely important in order to run pytest-xmlcomp properly.
+
+Generating XPath expressions
+----------------------------
+You can define the XPath expressions in a JSON file, which can be found in the data directory.
+Please make sure that the JSON file has the same basename as the XML file.
+A introduction to the JSON file format can be found here: `www.json.org`_
+You can also validate your JSON file before running pytest-xmlcomp. Just run: python3 -m json.tool foo.json
+
 
 Contributing
 ------------
@@ -83,4 +102,3 @@ If you encounter any problems, please `file an issue`_ along with a detailed des
 .. _`tox`: https://tox.readthedocs.io/en/latest/
 .. _`pip`: https://pypi.org/project/pip/
 .. _`PyPI`: https://pypi.org/project
-
