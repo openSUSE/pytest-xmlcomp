@@ -104,8 +104,9 @@ You can also check if your JSON file adheres to its syntax before running pytest
     $ python3 -m json.tool foo.json
 
 Here is an example for a directory structure:
-* tests/conftest.py -- define your custom hook here
-* tests/data/foo -- you can place you input XML file and your JSON file here
+
+* tests/conftest.py (define your custom hook here)
+* tests/data/foo (you can place you input XML file and your JSON file here)
 
 
 
