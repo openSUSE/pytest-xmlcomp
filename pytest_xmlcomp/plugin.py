@@ -85,7 +85,7 @@ class XMLJSONFile(pytest.File):
         jsonfile = self.fspath.new(ext='.json')
         try:
             jsondata = json.load(open(str(jsonfile)))
-        except json.decoder.JSONDecodeError as error:
+        except ValueError as error:
             print("JSON Syntax Error in file %s:\n%s" % (jsonfile, error),
                   file=sys.stderr)
             return
