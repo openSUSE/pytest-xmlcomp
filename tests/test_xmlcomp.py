@@ -11,7 +11,7 @@ def test_pytest_collect_good_files(good_dir):
 
 
 def test_pytest_collect_bad_files(bad_dir):
-    result = bad_dir.runpytest()
+    result = bad_dir.runpytest("-vs")
     assert result.ret == 1
 
 
