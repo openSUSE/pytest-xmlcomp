@@ -113,9 +113,9 @@ The hook can look like this:
             print("XML Syntax Error in file %s:\n%s" % (xmlfile, error),
             file=sys.stderr)
         return None
-    # --- tree modification here ---
-    # return the modified XML tree
-    return tree
+        # --- tree modification here ---
+        # return the modified XML tree
+        return tree
   
 Here is an example for the input XML and the accompanying JSON file:
 
