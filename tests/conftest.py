@@ -8,6 +8,7 @@ BAD_DATA = local(__file__).dirpath("data/bad/")
 XML_SYNTAX_ERROR_DATA = local(__file__).dirpath("data/xml_syn_error")
 JSON_SYNTAX_ERROR_DATA = local(__file__).dirpath("data/json_syn_error")
 
+
 @pytest.fixture
 def good_dir(testdir):
     gooddata_dir = testdir.tmpdir.mkdir("gooddata")
