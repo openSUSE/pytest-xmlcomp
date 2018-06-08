@@ -59,9 +59,35 @@ def test_XMLSyntaxError(xml_synerror_dir):
     assert result.ret == 2
 
 
+def test_XMLSyntaxError_with_Namespaces(xml_synerror_nsp_dir):
+    result = xml_synerror_nsp_dir.runpytest("-sv")
+    result.stderr.fnmatch_lines([
+        "XML Syntax Error in file*"
+        ])
+    assert result.ret == 2
+
+
 def test_JSONSyntaxError(json_synerror_dir):
     result = json_synerror_dir.runpytest("-sv")
     result.stderr.fnmatch_lines([
         "JSON Syntax Error in file*"
         ])
     assert result.ret == 5
+
+
+def test_JSONSyntaxError_with_Namespaces(json_synerror_namespaces_dir):
+    result = json_synerror_namespaces_dir.runpytest("-sv")
+    result.stderr.fnmatch_lines([
+        "JSON Syntax Error in file*"
+        ])
+    assert result.ret == 5
+
+
+def test_goodfiles_with_namespaces(good_namespaces_dir):
+    result = good_namespaces_dir.runpytest("-sv")
+    assert result.ret == 0
+
+
+def test_badfiles_with_namespaces(bad_namespaces_dir):
+    result = bad_namespaces_dir.runpytest("-sv")
+    assert result.ret == 1

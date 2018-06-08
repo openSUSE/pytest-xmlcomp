@@ -1,0 +1,12 @@
+{;
+  "ns": [
+    ["d", "http://docbook.org/ns/docbook"],
+    ["xi", "http://www.w3.org/2001/XInclude"],
+    ["xlink", "http://www.w3.org/1999/xlink"]
+  ],
+  "data": [
+      ["/d:doc",        ["<{http://docbook.org/ns/docbook}doc>"]],
+      ["/d:doc/d:foo",  ["<{http://docbook.org/ns/docbook}foo>"]],
+      ["/d:doc/d:bar",  ["<{http://docbook.org/ns/docbook}bar>"]]
+  ]
+}

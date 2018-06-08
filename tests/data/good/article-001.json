@@ -1,5 +1,8 @@
-[
-			["/doc", ["<doc>"]],
-      ["/doc/foo", ["<foo>"]],
-      ["/doc/bar", ["<bar>"]]
-]
+{
+  "ns": [],
+  "data": [
+      ["/doc",  	["<doc>"]],
+      ["/doc/foo", 	["<foo>"]],
+      ["/doc/bar",	["<bar>"]]
+  ]
+}

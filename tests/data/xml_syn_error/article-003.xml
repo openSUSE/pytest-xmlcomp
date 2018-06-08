@@ -1,4 +1,4 @@
-;<doc>
-	<foo/>
-	<bar/>
-</doc>
+;<d:doc>
+	<d:foo/>
+	<d:bar/>
+</d:doc>
