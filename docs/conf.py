@@ -114,15 +114,22 @@ todo_include_todos = False
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'alabaster'
+import guzzle_sphinx_theme
+
+html_theme = 'guzzle_sphinx_theme'
+
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
-#html_theme_options = {}
+html_theme_options = {
+#    'display_version': True,
+}
 
 # Add any paths that contain custom themes here, relative to this directory.
 #html_theme_path = []
+# html_theme_path = ["_themes", ]
+html_theme_path = guzzle_sphinx_theme.html_theme_path()
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
@@ -300,6 +307,6 @@ autoclass_content = 'both'
 
 # --
 intersphinx_mapping = {'python': ('https://docs.python.org/3.4', None),
-                       # 'pytest': ('https://docs.pytest.org', None),
+                       'pytest': ('https://docs.pytest.org/en/latest/', 'pytest.inv'),
                        # 'lxml':   ('http://lxml.de/api/index.html', None)
                        }
