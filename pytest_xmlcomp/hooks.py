@@ -7,8 +7,9 @@ import sys
 def pytest_xmlcomp_transform_xml(xmlfile):
     """
     Hook for transforming XML
+
     :param xmlfile: Input XML file which will be modified
-    :type xmlfile: str | :class:`py.path.local`
+    :type xmlfile: str | :py:class:`py.path.local`
     :returns: The modified XML file.
     """
     try:

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+
 __version__ = "0.3.0"
 
 import pytest
@@ -10,7 +11,8 @@ import sys
 
 def pytest_addoption(parser):
     """
-    Add options to pytest-xmlcomp
+    Register argparse-style pytest-xmlcomp options and ini-style config values,
+    called once at the beginning of a test run.
 
     :param parser: the parser object
     :type parser: :class:`_pytest.config.Parser`
@@ -29,7 +31,7 @@ def pytest_addhooks(pluginmanager):
     Add custom hook from hooks.py and register it.
 
     :param pluginmanager: The Plugin manager from pytest.
-    :class:`_pytest.config.PytestPluginManager`
+    :type pluginmanager: :class:`_pytest.config.PytestPluginManager`
     """
     pluginmanager.add_hookspecs(hooks)
     pluginmanager.register(hooks, "xmlcomp")
@@ -37,14 +39,16 @@ def pytest_addhooks(pluginmanager):
 
 def pytest_collect_file(parent, path):
     """
-    Collects all XML and corresponding JSON files and returns them.
+    Collects all XML and corresponding JSON files and returns them or None
+    for the given path. Any new node needs to have the specified
+    ``parent`` as a parent.
 
-    :param parent:
-    :type parent: :class:`_pytest.main.Session'
+    :param parent: The parent directory
+    :type parent: :class:`_pytest.main.Session`
     :param path: the path to collect
-    :type path: :class:`py._path.local.LocalPath`
+    :type path: :py:class:`py._path.local.LocalPath`
     :return: a XML and JSON file pair
-    :rtype: :class:`XMLJSONFile`
+    :rtype: :class:`pytest_xmlcomp.XMLJSONFile`
     """
     jsonfile = path.new(ext=".json")
     if path.ext == ".xml" and jsonfile.exists():
@@ -52,28 +56,35 @@ def pytest_collect_file(parent, path):
         return XMLJSONFile(path, parent)
 
 
-def stringifylist(res):
-        """
-        Converts the result of the XPath comparison into a string.
-        :param res: Result of XPath comparison
-        :returns result: list with the string/object
-        """
-        result = []
-        for obj in res:
-            if isinstance(obj, (etree._Comment, etree._ProcessingInstruction)):
-                result.append(str(obj))
-            elif isinstance(obj, etree._Element):
-                result.append("<%s>" % obj.tag)
-            elif isinstance(obj, str):
-                result.append(obj)
-        return result
+def stringifylist(node):
+    """
+    Converts the result of the XPath comparison into a string.
+
+    :param node: Result of XPath comparison
+    :type node: list
+
+    :returns result: list with the string/object
+    :rtype: list
+    """
+    result = []
+    for obj in node:
+        if isinstance(obj, (etree._Comment, etree._ProcessingInstruction)):
+            result.append(str(obj))
+        elif isinstance(obj, etree._Element):
+            result.append("<%s>" % obj.tag)
+        elif isinstance(obj, str):
+            result.append(obj)
+    return result
 
 
 class XMLJSONFile(pytest.File):
+    """A XML and JSON file pair"""
     def collect(self):
         """
         Modify the XML files via a custom hook and parse the JSON.
-        Returns: It returns XPath items which are found in the JSON file.
+
+        :returns: an XPath item
+        :rtype: :class:`pytest_xmlcomp.plugin.XPathItem`
         """
         import json
         xmlfile = self.fspath
@@ -94,16 +105,22 @@ class XMLJSONFile(pytest.File):
 
 
 class XPathItem(pytest.Item):
+    """An XPath item"""
+
     def __init__(self, xpath, parent, expresult, tree):
         """
         Initializes the XPath item.
+
         :param xpath: the xpath item
-        :param parent:
-        :param expresult: the result which will be expected.
-        :param tree: the tree of the XML file
         :type xpath: xpath object
-        :type parent: :class:`_pytest.main.Session'
+
+        :param parent:
+        :type parent: :class:`_pytest.main.Session`
+
+        :param expresult: the result which will be expected.
         :type expresult: JSON object
+
+        :param tree: the tree of the XML file
         :type tree: class lxml.ElementTree
         """
         super().__init__(xpath, parent)
@@ -116,6 +133,7 @@ class XPathItem(pytest.Item):
     def runtest(self):
         """
         Apply an XPath to the modified XML file and check the result.
+
         :raises XPathError: result of XPath doesn't match with modified XML
         """
         res = self.tree.xpath(self.xpath)
@@ -130,6 +148,7 @@ class XPathItem(pytest.Item):
     def repr_failure(self, excinfo):
         """
         Called when self.runtest() raises an exception.
+
         :param excinfo: the Information about the exception
         :type excinfo: a tuple with exception informations
         """
@@ -145,6 +164,9 @@ class XPathItem(pytest.Item):
     def reportinfo(self):
         """
         Returns an error for the failed XPath.
+
+        :return: error string
+        :rtype: str
         """
         return self.fspath, 0, "XPath: %s" % self.name
 

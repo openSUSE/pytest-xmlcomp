@@ -4,15 +4,20 @@
    contain the root `toctree` directive.
 
 Welcome to pytest-xmlcomp's documentation!
-===============================================================
+==========================================
 
-Version: 0.3.0
-
-Contents:
+.. Building the API documentation:
+   $ docs
+   $ sphinx-apidoc -o . ../pytest_xmlcomp
 
 .. toctree::
    :maxdepth: 2
+   :caption: Contents
 
+   modules
+
+
+.. include:: ../README.rst
 
 
 Indices and tables

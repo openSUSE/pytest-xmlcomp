@@ -1,1 +1,3 @@
 Sphinx
+# needed to create .inv files for intersphinx
+sphobjinv
