@@ -1,5 +1,11 @@
-[
-			["/baz", ["<baz>"]],
-      ["/doc/foo", ["<foo>"]],
-      ["/doc/bar", ["<bar>"]]
-]
+{
+  "ns": [
+    ["d", "http://docbook.org/ns/docbook"],
+    ["xi", "http://www.w3.org/2001/XInclude"],
+    ["xlink", "http://www.w3.org/1999/xlink"]
+  ],
+  "data": [
+    ["/d:doc",     ["<doc>"]],
+    ["/d:doc/foo", ["<foo>"]]
+  ]
+}

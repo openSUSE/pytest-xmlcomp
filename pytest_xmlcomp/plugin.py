@@ -100,14 +100,15 @@ class XMLJSONFile(pytest.File):
             print("JSON Syntax Error in file %s:\n%s" % (jsonfile, error),
                   file=sys.stderr)
             return
-        for xpath, expresult in jsondata:
-            yield XPathItem(xpath, self, expresult, tree)
+        namesp = None if not jsondata.get('ns') else dict(jsondata.get('ns'))
+        print("DEBUG! %s" % type(jsondata.get('ns')))
+        for xpath, expresult in jsondata['data']:
+            yield XPathItem(xpath, self, expresult, tree, namesp)
 
 
 class XPathItem(pytest.Item):
     """An XPath item"""
-
-    def __init__(self, xpath, parent, expresult, tree):
+    def __init__(self, xpath, parent, expresult, tree, namesp):
         """
         Initializes the XPath item.
 
@@ -118,16 +119,20 @@ class XPathItem(pytest.Item):
         :type parent: :class:`_pytest.main.Session`
 
         :param expresult: the result which will be expected.
-        :type expresult: JSON object
-
         :param tree: the tree of the XML file
-        :type tree: class lxml.ElementTree
+        :param namesp: the namespaces specified in the JSON file
+        :type xpath: xpath object
+        :type parent: :class:`_pytest.main.Session'
+        :type expresult: JSON object
+        :type tree: :class:`lxml.ElementTree`
+        :type namesp: :class:`dict`
         """
         super().__init__(xpath, parent)
         self.expresult = expresult
         self.xpath = self.name
         self.tree = tree[0]
         self.root = tree[0].getroot()
+        self.namespaces = namesp
         print(self.root)
 
     def runtest(self):
@@ -136,7 +141,7 @@ class XPathItem(pytest.Item):
 
         :raises XPathError: result of XPath doesn't match with modified XML
         """
-        res = self.tree.xpath(self.xpath)
+        res = self.tree.xpath(self.xpath, namespaces=self.namespaces)
         if isinstance(res, list):
             res = stringifylist(res)
             if res != self.expresult:
