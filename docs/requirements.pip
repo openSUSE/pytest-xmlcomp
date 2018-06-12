@@ -1,1 +1,4 @@
 Sphinx
+guzzle-sphinx-theme
+# needed to create .inv files for intersphinx
+sphobjinv
