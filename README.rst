@@ -11,7 +11,7 @@ Version: 0.3.0
 
 A simple plugin for comparing XML files with the `pytest`_ framework.
 The input XML file is modified with a user-defined function and the result is checked against XPath expressions.
-
+The XPath expression can also contain namespaces.
 This `pytest`_ plugin was generated with `Cookiecutter`_ along with `@hackebrot`_'s `cookiecutter-pytest-plugin`_ template.
 
 
@@ -19,7 +19,7 @@ Overview
 --------
 
 pytest-xmlcomp is a plugin for `pytest`, which takes a XML file and transforms it with a user-defined hook.
-It then takes user-expected XPath expressions from a JSON file and checks if they are available in the transformed XML file.
+Then the script fetches user-expected XPath expressions (optionally with namespaces) from a JSON file and checks if they are available in the transformed XML file.
 
 
 Requirements
@@ -43,8 +43,9 @@ Requirements
 Make sure you have:
 
 * a input XML file
-* a hook ``pytest_xmlcomp_transform_xml`` which modifies your input XML file into a "result" XML file
-* a valid JSON file, which contains the XPath expressions you want to check against
+* a hook ``pytest_xmlcomp_transform_xml`` which modifies your input XML file into a "result" XML tree
+* a valid JSON file, which contains the XPath expressions you want to check against the result tree
+* (optional: valid namespaces in the JSON and XML file)
 
 
 Using Hooks
@@ -59,16 +60,27 @@ Generating XPath Expressions
 Define your XPath expressions in a JSON file, which can be found in the data directory.
 Example:
 
-* first column: XPath expression
-* second column: expected result)
+* list 'ns': contains the namespaces
+  - first column: namespace prefix
+  - second colum: namespace URI
+* list 'data': contains the XPath expressions
+  - first column: XPath expression
+  - second column: expected result
 
 .. code-block:: json
 
-    [
-        ["/doc",        ["<doc>"]],
-        ["/doc/foo",    ["<foo>"]],
-        ["/doc/bar",    ["<bar>"]]
-    ]
+    {
+      "ns": [
+        ["d",     "http://docbook.org/ns/docbook"],
+        ["xi",    "http://www.w3.org/2001/XInclude"],
+        ["xlink", "http://www.w3.org/1999/xlink"]
+      ],
+      "data": [
+        ["/d:doc/",           ["<{http://docbook.org/ns/docbook}doc>"]],
+        ["/d:doc/d:foo",      ["<{http://docbook.org/ns/docbook}foo>"]],
+        ["/d:doc/d:bar",      ["<{http://docbook.org/ns/docbook}bar>"]]
+      ]
+    }
 
 
 Make sure that the JSON file has the same basename as the XML file.
@@ -114,24 +126,30 @@ Here is an example for the input XML and the accompanying JSON file:
 
 .. code-block:: xml
 
-    <doc>
-        <foo/>
-        <bar/>
-    </doc>
+    <d:doc xmlns:d="http://docbook.org/ns/docbook">
+        <d:foo/>
+        <d:bar/>
+    </d:doc>
 
 .. code-block:: json
-
-    [
-        ["/doc",     ["<doc>"]],
-        ["/doc/foo", ["<foo>"]],
-        ["/doc/bar", ["<bar>"]]
-    ]
+  
+   {
+      "ns": [
+        ["d",     "http://docbook.org/ns/docbook"],
+        ["xi",    "http://www.w3.org/2001/XInclude"],
+        ["xlink", "http://www.w3.org/1999/xlink"]
+      ],
+      "data": [
+        ["/d:doc/",           ["<{http://docbook.org/ns/docbook}doc>"]],
+        ["/d:doc/d:foo",      ["<{http://docbook.org/ns/docbook}foo>"]],
+        ["/d:doc/d:bar",      ["<{http://docbook.org/ns/docbook}bar>"]]
+      ]
+    }
 
 
 Limitations
 -----------
 
-* The JSON file can not use namespace expression at the moment.
 * Currently, you can only use a single, global hook function to transforms
   your XML into your result tree. It is not possible at the moment to have
   a more fine-granular approach where to have different functions to
