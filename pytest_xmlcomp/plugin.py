@@ -23,7 +23,7 @@ def pytest_addoption(parser):
             action='store',
             dest='datadir',
             default='tests/data',
-            help='Give the directory containing the XML files.')
+            help='Directory containing the XML and JSON files.')
 
 
 def pytest_addhooks(pluginmanager):
@@ -101,7 +101,6 @@ class XMLJSONFile(pytest.File):
                   file=sys.stderr)
             return
         namesp = None if not jsondata.get('ns') else dict(jsondata.get('ns'))
-        print("DEBUG! %s" % type(jsondata.get('ns')))
         for xpath, expresult in jsondata['data']:
             yield XPathItem(xpath, self, expresult, tree, namesp)
 

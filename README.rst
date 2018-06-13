@@ -47,6 +47,11 @@ Make sure you have:
 * a valid JSON file, which contains the XPath expressions you want to check against the result tree
 * (optional: valid namespaces in the JSON and XML file)
 
+Options
+-------
+
+* ``--datadir``: directory which contains the XML and JSON files. You can set this in ``setup.cfg`` or ``pytest.ini`` as well.
+
 
 Using Hooks
 -----------
