@@ -76,7 +76,7 @@ def stringifylist(node, namespaces=None):
             ns = etree.QName(obj).namespace
             if ns:
                 prefix = {v: k for k, v in namespaces.items()}
-                result.append("<%s:%s>" % (prefix.get(ns, ns),
+                result.append("<%s:%s>" % (prefix.get(ns),
                                            etree.QName(obj).localname))
             else:
                 result.append("<%s>" % obj.tag)
