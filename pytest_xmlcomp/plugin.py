@@ -56,12 +56,14 @@ def pytest_collect_file(parent, path):
         return XMLJSONFile(path, parent)
 
 
-def stringifylist(node):
+def stringifylist(node, namespaces=None):
     """
     Converts the result of the XPath comparison into a string.
 
     :param node: Result of XPath comparison
     :type node: list
+    :param namespaces: available namespaces
+    :type namespaces: dict
 
     :returns result: list with the string/object
     :rtype: list
@@ -71,7 +73,13 @@ def stringifylist(node):
         if isinstance(obj, (etree._Comment, etree._ProcessingInstruction)):
             result.append(str(obj))
         elif isinstance(obj, etree._Element):
-            result.append("<%s>" % obj.tag)
+            ns = etree.QName(obj).namespace
+            if ns:
+                prefix = {v: k for k, v in namespaces.items()}
+                result.append("<%s:%s>" % (prefix.get(ns, ns),
+                                           etree.QName(obj).localname))
+            else:
+                result.append("<%s>" % obj.tag)
         elif isinstance(obj, str):
             result.append(obj)
     return result
@@ -141,12 +149,11 @@ class XPathItem(pytest.Item):
         :raises XPathError: result of XPath doesn't match with modified XML
         """
         res = self.tree.xpath(self.xpath, namespaces=self.namespaces)
-        if isinstance(res, list):
-            res = stringifylist(res)
-            if res != self.expresult:
-                raise XPathError(
-                    self.xpath, res, self.expresult, self.tree.docinfo.URL
-                )
+        res = stringifylist(res, namespaces=self.namespaces)
+        if res != self.expresult:
+            raise XPathError(
+                self.xpath, res, self.expresult, self.tree.docinfo.URL
+            )
         return True
 
     def repr_failure(self, excinfo):
