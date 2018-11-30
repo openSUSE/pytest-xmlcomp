@@ -63,7 +63,7 @@ def stringifylist(node, namespaces=None):
     :param node: Result of XPath comparison
     :type node: list
     :param namespaces: available namespaces
-    :type namespaces: dict
+    :type namespaces: dict | None
 
     :returns result: list with the string/object
     :rtype: list
