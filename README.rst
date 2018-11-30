@@ -42,8 +42,8 @@ Requirements
 
 Make sure you have:
 
-* a input XML file
-* a hook ``pytest_xmlcomp_transform_xml`` which modifies your input XML file into a "result" XML tree
+* an input XML file
+* a hook ``pytest_xmlcomp_transform_xml``, which modifies your input XML file into a "result" XML tree
 * a valid JSON file, which contains the XPath expressions you want to check against the result tree
 * (optional: valid namespaces in the JSON and XML file)
 
@@ -87,6 +87,8 @@ Example:
       ]
     }
 
+
+Note that if different namespace prefixes point to the same namespace, only the last one is used.
 
 Make sure that the JSON file has the same basename as the XML file.
 An introduction to the JSON file format can be found here: `www.json.org`.
