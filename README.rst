@@ -81,9 +81,9 @@ Example:
         ["xlink", "http://www.w3.org/1999/xlink"]
       ],
       "data": [
-        ["/d:doc/",           ["<{http://docbook.org/ns/docbook}doc>"]],
-        ["/d:doc/d:foo",      ["<{http://docbook.org/ns/docbook}foo>"]],
-        ["/d:doc/d:bar",      ["<{http://docbook.org/ns/docbook}bar>"]]
+        ["/d:doc",           ["<d:doc>"]],
+        ["/d:doc/d:foo",      ["<d:foo>"]],
+        ["/d:doc/d:bar",      ["<d:bar>"]]
       ]
     }
 
@@ -147,9 +147,9 @@ Here is an example for the input XML and the accompanying JSON file:
         ["xlink", "http://www.w3.org/1999/xlink"]
       ],
       "data": [
-        ["/d:doc/",           ["<{http://docbook.org/ns/docbook}doc>"]],
-        ["/d:doc/d:foo",      ["<{http://docbook.org/ns/docbook}foo>"]],
-        ["/d:doc/d:bar",      ["<{http://docbook.org/ns/docbook}bar>"]]
+        ["/d:doc",           ["<d:doc>"]],
+        ["/d:doc/d:foo",      ["<d:foo>"]],
+        ["/d:doc/d:bar",      ["<d:bar>"]]
       ]
     }
 
